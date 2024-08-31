@@ -1,0 +1,16 @@
+# Node.js
+node_modules/
+.env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Build
+build/
+dist/
+
+# React
+.DS_Store
+.vscode/
