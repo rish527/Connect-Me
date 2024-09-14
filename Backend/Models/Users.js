@@ -17,9 +17,18 @@ const userSchema=new mongoose.Schema({
         type:String,
         required:true,
     },
-    experiences:[{type:String}],
-    skills:[{type:String}],
-    projects:[{type:String}]
+    experiences:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Experience"
+    }],
+    skills:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Skill"
+    }],
+    projects:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Project"
+    }]
 })
 
 const User=mongoose.model("User",userSchema);

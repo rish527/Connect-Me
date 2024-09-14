@@ -3,7 +3,13 @@ import passport from "passport";
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+
+import User from "./Models/Users.js";
+
 import authRouter from "./routes/auth.js";
+import addexperienceRouter from "./routes/experiences.js";
+import addskillRouter from "./routes/skills.js";
+import addprojectRouter from "./routes/projects.js";
 
 const app=express();
 app.use(express.json());
@@ -32,19 +38,23 @@ let opts={};
 opts.jwtFromRequest=ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey='mysecretkey';
 passport.use(
-    new JwtStrategy(opts,(jwt_payload,done)=>{
+    new JwtStrategy(opts, async (jwt_payload,done)=>{
         console.log(jwt_payload);
-        User.findOne({_id:jwt_payload.iddentifier},(err,user)=>{
-            if(err){
-                done(err,false);
-            }
+        try{
+            const user=await User.findOne({_id:jwt_payload.identifier});
+        
             if(user){
                 done(null,user);
             }
             else{
                 done(null,false);
             }
-        });
+        }catch(err){
+            if(err){
+                done(err,false);
+            }
+        }
+        
     })
 );
 
@@ -59,6 +69,9 @@ app.get("/api",(req,res)=>{
 })
 
 app.use("/auth",authRouter);
+app.use("/experience",addexperienceRouter);
+app.use("/skill",addskillRouter);
+app.use("/project",addprojectRouter);
 
 
 app.listen(port,()=>{

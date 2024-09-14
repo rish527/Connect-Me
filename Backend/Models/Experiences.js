@@ -17,7 +17,7 @@ const experienceSchema=new mongoose.Schema({
         type:String,
         required:false
     },
-    debugger:{
+    despription:{
         type:String,
         required:false
     }
