@@ -49,7 +49,7 @@ export const signup= async(req,res)=>{
             maxAge:1*24*60*60*1000,
             sameSite:"strict", //CSRF
             secure:process.env.NODE_ENV==="production"
-,        })
+        })
         res.status(201).json({message:"User registerd successfully"});
 
         //5 send email
@@ -58,7 +58,7 @@ export const signup= async(req,res)=>{
             await sendWelcomeMail(user.email,user.name,profileUrl)
         }catch(emailError){
             console.log("Error in sending welcome Email",emailError);
-            res.status(400).json("Email failed");
+            // res.status(400).json("Email failed");
         }
 
     } catch (error) {
@@ -106,4 +106,14 @@ export function logout(req,res){
     res.clearCookie("jwt-linkedin");
     res.status(200).json({message:"Logged out successfully"});
     console.log("User LogedOut");
+}
+
+
+export function getCurrentUser(req,res){
+    try {
+        res.json(req.user);
+    } catch (error) {
+        console.log("Error in getUser controler");
+        return res.status(401).json({message:"Server Error"});
+    }
 }
