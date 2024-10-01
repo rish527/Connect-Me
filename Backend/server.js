@@ -4,6 +4,8 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/user.js";
+import postsRoutes from "./routes/posts.js"
+import notificationRoutes from "./routes/notification.js"
 import {connectDB} from "./lib/db.js";
 
 dotenv.config();
@@ -17,6 +19,8 @@ app.use(cookieParser());
 
 app.use("/api/v1/auth",authRoutes);
 app.use("/api/v1/users",userRoutes);
+app.use("/api/v1/posts",postsRoutes);
+app.use("/api/v1/notifications",notificationRoutes);
 
 // app.use("/",(req,res)=>{
 //     res.send("Server is Live");
