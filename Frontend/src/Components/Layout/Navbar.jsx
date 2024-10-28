@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import React from 'react'
 import { axiosInstance } from '../../lib/axios'
@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 const Navbar = () => {
 
   const {data:authUser}=useQuery({queryKey:["authUser"]})
+  const queryClient=useQueryClient();
 
   const {data:notifications}=useQuery({
     queryKey:["notifications"],
@@ -23,6 +24,9 @@ const Navbar = () => {
 
   const {mutate:logout}=useMutation({
     mutationFn:()=>axiosInstance.post("/auth/logout"),
+    onSuccess:()=>{
+      queryClient.invalidateQueries(["authUser"])
+    }
   })
 
   const unreadNotif=notifications?.data.filter((notif)=>!notif.read).length;
