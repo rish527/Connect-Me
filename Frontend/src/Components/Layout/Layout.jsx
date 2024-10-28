@@ -1,7 +1,11 @@
 import React, { Children } from 'react'
 import Navbar from './Navbar'
+import { useQuery } from '@tanstack/react-query'
 
 const Layout = ({children}) => {
+  const {data:authUser, isLoading}=useQuery({queryKey:["authUser"]});
+  console.log("Auth user is in Layout",authUser);
+
   return (
     <div className='min-h-screen bg-base-100'>
         <Navbar />
