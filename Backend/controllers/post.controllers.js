@@ -11,7 +11,7 @@ export async function getFeedPosts(req,res){
         .populate("comments.auther","name username profilePicture")
         .sort({createdAt:-1});
 
-        res.status(400).json(posts);
+        res.status(200).json(posts);
 
     } catch (error) {
         console.log("Error in the getFeedPosts Controler:",error);
@@ -22,17 +22,24 @@ export async function getFeedPosts(req,res){
 export async function createPost(req,res){
     try {
         let {content, image}=req.body;
-
+        console.log(image);
         let newPost;
         if(image){
-            const imgResult=await cloudinary.uploader.upload(image);
-            newPost=new Post({
-                auther:req.user._id,
-                content,
-                image:imgResult.secure_url
-            })
+            try {
+                const imgResult = await cloudinary.uploader.upload(image);
+                newPost = new Post({
+                    auther: req.user._id,
+                    content,
+                    img: imgResult.secure_url,
+                });
+                
+            } catch (cloudinaryError) {
+                console.log("Error uploading image to Cloudinary:", cloudinaryError);
+                return res.status(500).json({ message: "Image upload failed" });
+            }
         }
         else{
+            console.log("No image")
             newPost=new Post({
                 auther:req.user._id,
                 content
@@ -40,6 +47,7 @@ export async function createPost(req,res){
         }
 
         await newPost.save();
+        console.log("New Post:",newPost);
 
         res.status(201).json(newPost);
 
