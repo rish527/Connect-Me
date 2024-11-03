@@ -20,6 +20,7 @@ function PostCreation({user}) {
         },
         onSuccess:()=>{
             resetForm();
+            queryClient.invalidateQueries(["posts"])
             toast.success("Post creted successfully");
         },
         onError:(err)=>{

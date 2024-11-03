@@ -6,7 +6,7 @@ import cloudinary from "../lib/cloudinary.js";
 
 export async function getFeedPosts(req,res){
     try {
-        const posts=await Post.find({auther:{$in:req.user.connection}})
+        const posts=await Post.find({auther:{$in:[...req.user.connection,req.user._idid]}})
         .populate("auther","name username profilePicture headline")
         .populate("comments.auther","name username profilePicture")
         .sort({createdAt:-1});
@@ -22,7 +22,7 @@ export async function getFeedPosts(req,res){
 export async function createPost(req,res){
     try {
         let {content, image}=req.body;
-        console.log(image);
+        // console.log(image);
         let newPost;
         if(image){
             try {
@@ -39,7 +39,7 @@ export async function createPost(req,res){
             }
         }
         else{
-            console.log("No image")
+            // console.log("No image")
             newPost=new Post({
                 auther:req.user._id,
                 content
@@ -47,7 +47,7 @@ export async function createPost(req,res){
         }
 
         await newPost.save();
-        console.log("New Post:",newPost);
+        // console.log("New Post:",newPost);
 
         res.status(201).json(newPost);
 
