@@ -6,7 +6,7 @@ import cloudinary from "../lib/cloudinary.js";
 
 export async function getFeedPosts(req,res){
     try {
-        const posts=await Post.find({auther:{$in:[...req.user.connection,req.user._idid]}})
+        const posts=await Post.find({auther:{$in:[...req.user.connection,req.user._id]}})
         .populate("auther","name username profilePicture headline")
         .populate("comments.auther","name username profilePicture")
         .sort({createdAt:-1});
@@ -59,6 +59,7 @@ export async function createPost(req,res){
 
 export async function deletePost(req,res){
     try {
+        console.log("Deletion called");
         const userId=req.user._id;
         const postId=req.params.id;
 
@@ -72,12 +73,9 @@ export async function deletePost(req,res){
             res.status(401).json({message:"You are not allowed to delete this post"});
         }
         
-        if(post.img){
-            await cloudinary.uploader.destroy(post.img.split("/").pop().split(".")[0]);
-        }
-        else{
-            await Post.findByIdAndDelete(postId);
-        }
+        await Post.findByIdAndDelete(postId);
+
+		res.status(200).json({ message: "Post deleted successfully" });
 
     } catch (error) {
         console.log('Error in the deletePost Controler:',error);
@@ -93,7 +91,7 @@ export async function getPostById(req,res){
         const post=await Post.findById(postId)
         .populate("auther","name username profilePicture headline")
         .populate("comments.auther","name profilePicture username headline")
-
+        console.log("Post by Id");
         res.status(200).json(post);
 
     } catch (error) {
@@ -107,10 +105,10 @@ export async function createComment(req,res){
         const postId=req.params.id;
         const {content}=req.body;
 
-        const post=await Post.findByIdAndUpdate(postId,{$push:{comments:{auther:req.user_id, content}}},{new:true})
+        const post=await Post.findByIdAndUpdate(postId,{$push:{comments:{auther:req.user._id, content}}},{new:true})
         .populate("auther","name email username headline profilePicture");
 
-        if(post.auther.toString()!==req.user._id.toString()){
+        if(post.auther._id.toString()!==req.user._id.toString()){
             const notification=new Notification({
                 recipient:post.auther,
                 type:"comment",
@@ -131,9 +129,10 @@ export async function likePost(req,res){
         const postId=req.params.id;
         const userId=req.user._id;
         const post=await Post.findById(postId);
-
+        // console.log(post);
         if(post.likes.includes(userId)){
             await Post.findByIdAndUpdate(postId,{$pull:{likes:userId}},{new:true})
+            // console.log("Liked by user")
         }
         else{
             post.likes.push(userId);
@@ -147,9 +146,10 @@ export async function likePost(req,res){
 
                 await newNotification.save();
             }
+            await Post.findByIdAndUpdate(postId,{$push:{likes:userId}},{new:true})
             res.status(201).json(post);
         }
-
+        // console.log(post)
     } catch (error) {
         console.error("Error in likePost controller:",error);
         res.status(500).json({message:"Internal server error"});

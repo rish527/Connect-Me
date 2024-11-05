@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-// import { User } from "../models/user.js";
+import  User  from "./user.js";
 
 const postSchema =new mongoose.Schema({
     auther:{type:mongoose.Schema.Types.ObjectId, ref:"User", required:"true"},

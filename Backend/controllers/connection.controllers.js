@@ -1,21 +1,26 @@
 import mongoose from "mongoose";
 import ConnectionRequest from "../models/connectionRequest.model.js";
+import Notification from "../models/notification.js"
 import { request } from "express";
 import User from "../models/user.js";
 
 export const sendConnectionRequest=async(req,res)=>{
     try{
+        console.log(req.user);
         const {userId}=req.params;
-        const senderId=req.user._id;
-        console.log("User making request:", req.user._id);
+        const senderId=req.user._id.toString();
+        console.log("User making request:", senderId);
         console.log("Target userId:", userId);
         if(senderId==userId){
             return res.status(400).json({message:"You can't send a connection request to yourself"});
         }
-
-        if(req.user.connections.includes(userId)){
+        console.log("Not same user");
+        
+        if(req.user.connection.includes(userId)){
             return res.status(400).json({message:"You're already connected with this user"});
         }
+        console.log("Not existing");
+
         const existingRequest=await ConnectionRequest.findOne({
             sender:senderId,
             receiver:userId,
@@ -28,7 +33,7 @@ export const sendConnectionRequest=async(req,res)=>{
         console.log("making request");
         const newRequest=new ConnectionRequest({
             sender:senderId,
-            receiver:userId,
+            recipient:userId,
         });
         await newRequest.save();
 
@@ -45,7 +50,7 @@ export const acceptConnectionRequest=async(req,res)=>{
         const {requestId}=req.params;
         const userId=req.user._id;
 
-        const request=await ConnectionRequest.findOne(requestId)
+        const request=await ConnectionRequest.findById(requestId)
             .populate("sender","name email username")
             .populate("recipient","name username")
 
@@ -64,8 +69,8 @@ export const acceptConnectionRequest=async(req,res)=>{
         request.status="accepted";
         await request.save();
 
-        await User.findByIdAndUpdate(request.sender._id,{$addToSet:{connections:userId}});
-        await User.findByIdAndUpdate(userId,{$addToSet:{connections:request.sender._id}});
+        await User.findByIdAndUpdate(request.sender._id,{$addToSet:{connection:userId}});
+        await User.findByIdAndUpdate(userId,{$addToSet:{connection:request.sender._id}});
 
         const notification=new Notification({
             recipient:request.sender._id,
@@ -169,10 +174,10 @@ export const getConnectionStatus=async(req,res)=>{
         const myId=req.user._id;
         const targetUser=req.params.userId;
 
-        const currentUser=User.findById(myId)
+        const currentUser=await User.findById(myId)
         
         if(currentUser.connection.includes(targetUser)){
-            res.json({status:"connected"})
+            return res.json({status:"connected"})
         }
         
         const pendingRequest=await ConnectionRequest.findOne({
@@ -188,11 +193,11 @@ export const getConnectionStatus=async(req,res)=>{
                 return res.json({status:"pending"});
             }
             else{
-                return res.json({status:"sent",requestId:pendingRequest._id});
+                return res.json({status:"received",requestId:pendingRequest._id});
             }
         }
 
-        res.json({status:"not connected"});
+        return res.json({status:"not connected"});
 
     }catch(error){
         console.error("Error in getConnectionStatus controller",error);
