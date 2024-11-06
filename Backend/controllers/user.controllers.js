@@ -4,12 +4,16 @@ import cloudinary from "../lib/cloudinary.js"
 export const getSuggestions= async(req,res)=>{
     try {
         const user=req.user;
-        const connections=user.connections;
+        const connections=user.connection;
 
         const suggestions=await User.find({
             _id:{$ne:user._id, $nin:connections}
         }).select("name username profilePicture headline")
         .limit(3);
+
+        // console.log(suggestions);
+        // console.log(user);
+        // console.log(connections);
 
         res.status(200).json(suggestions);
     } catch (error) {

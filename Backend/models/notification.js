@@ -8,7 +8,7 @@ const notificationSchema=new mongoose.Schema({
     relatedPost:{type:mongoose.Schema.Types.ObjectId, ref:"User"},
     read:{type:Boolean, default:false},
 
-},{timestampst:true})
+},{timestamps:true})
 
 const Notification=mongoose.model("Notification",notificationSchema);
 
