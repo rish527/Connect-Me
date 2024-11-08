@@ -9,6 +9,8 @@ import toast, { Toaster } from "react-hot-toast"
 import { useQuery } from "@tanstack/react-query"
 import { axiosInstance } from "./lib/axios"
 import NotificationPage from "./Pages/NotificationPage"
+import NetworkPage from "./Pages/NetworkPage"
+import PostPage from "./Pages/PostPage"
 
 export default function App(){
 
@@ -36,6 +38,8 @@ export default function App(){
         <Route path="/signup" element={!authUser ? <SignUpPage />: <Navigate to={"/"} />} />
         <Route path="/login" element={!authUser ? <LoginPage />:<Navigate to={"/"} />} />
         <Route path="/notifications" element={authUser ? <NotificationPage />:<Navigate to={"/"} /> }/>
+        <Route path="/network" element={authUser ? <NetworkPage />:<Navigate to={"/"}/>} />
+        <Route path="/post/:postId" element={authUser ? <PostPage />:<Navigate to={"/"}/>} />
       </Routes>
       <Toaster />
     </Layout>

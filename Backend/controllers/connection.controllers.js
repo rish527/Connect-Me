@@ -94,7 +94,7 @@ export const rejectConnectionRequest=async(req,res)=>{
         const {requestId}=req.params;
         const userId=req.user._id;
 
-        const request=await ConnectionRequest.findOne(requestId)
+        const request=await ConnectionRequest.findById(requestId)
             .populate("sender","name email username")
             .populate("recipient","name username")
         
@@ -113,12 +113,12 @@ export const rejectConnectionRequest=async(req,res)=>{
         request.status="rejected";
         await request.save();
 
-        const notification= new Notification({
-            recipient:request.sender._id,
-            type:"connectionRejected",
-            relatedUser:userId,
-        })
-        await notification.save();
+        // const notification= new Notification({
+        //     recipient:request.sender._id,
+        //     type:"connectionRejected",
+        //     relatedUser:userId,
+        // })
+        // await notification.save();
 
         res.json({message:"Coonetion request accepted successfully"});
 
@@ -145,10 +145,11 @@ export const getConnectionRequests=async(req,res)=>{
 export const getUserConnectons=async(req,res)=>{
     try{
         const userId=req.user._id;
-        const user=User.findById(userId)
-            .populate("connections","name username profilePicture headline connections")
+        const user=await User.findById(userId)
+            .populate("connection","name username profilePicture headline connections")
         
-        res.json(user.connections);
+        // console.log(user.connection);
+        res.json(user.connection);
     }catch(error){
         console.error("Error in getUserConnections controller",error);
         res.status(500).json({message:"Server error"});

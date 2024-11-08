@@ -90,6 +90,7 @@ function NotificationPage() {
 
     function renderRelatedPost(relatedPost){
         if(!relatedPost) return null;
+        console.log("Post:",relatedPost)
 
         return(
             <Link to={`/post/${relatedPost._id}`}
@@ -144,12 +145,12 @@ function NotificationPage() {
                                                 <div className='p-1 bg-gray-100 rounded-full'>
                                                     {renderNotificationIcon(notification.type)}
                                                 </div>
-                                                <p className='text-sm'>{renderNotificationContent(notification)}</p>
+                                                <p className='text-sm'>{" "} {renderNotificationContent(notification)}</p>
                                             </div>
                                             <p className='text-xs text-gray-500 mt-1'>
-                                                {/* {formatDistanceToNow(new Date(notification.createdAt), {
+                                                {formatDistanceToNow(new Date(notification.createdAt), {
                                                     addSuffix: true,
-                                                })} */}
+                                                })}
                                                 {/* {formatDistance(new Date(notification.createdAt),new Date(),{addSuffix:true})} */}
                                             </p>
                                             {renderRelatedPost(notification.relatedPost)}
