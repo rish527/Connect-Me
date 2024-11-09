@@ -26,9 +26,9 @@ const HomePage = () => {
     }
   })
 
-  console.log("Auth user:",authUser);
-  console.log("Posts:",posts);
-  console.log("Suggestions:",recomendedUsers);
+  // console.log("Auth user:",authUser);
+  // console.log("Posts:",posts);
+  // console.log("Suggestions:",recomendedUsers);
 
   return (
     <div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>

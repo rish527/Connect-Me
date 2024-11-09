@@ -90,7 +90,7 @@ function ProfileHeader({userData, onSave, isOwnProfile}) {
               onClick={()=>removeConnection(userData._id)}
             >
               <X size={20} className='mr-2' />
-              Remove Connection;
+              Remove Connection
             </button>
           </div>
         )

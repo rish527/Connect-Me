@@ -41,7 +41,7 @@ const Navbar = () => {
                 <img className='h-8 rounded' src='/small-logo.png' alt='LinkedIn' />
               </Link>
             </div>
-            <div className='flex items-center gap-2 md:gap-6'>
+            <div className='flex items-center gap-4 md:gap-6'>
               {authUser ? (
                 <>
                   <Link to={"/"} className='text-neutral flex flex-col items-center'>

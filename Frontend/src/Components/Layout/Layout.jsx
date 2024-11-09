@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 
 const Layout = ({children}) => {
   const {data:authUser, isLoading}=useQuery({queryKey:["authUser"]});
-  console.log("Auth user is in Layout",authUser);
+  // console.log("Auth user is in Layout",authUser);
 
   return (
     <div className='min-h-screen bg-base-100'>

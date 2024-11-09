@@ -129,7 +129,7 @@ export async function likePost(req,res){
         const postId=req.params.id;
         const userId=req.user._id;
         const post=await Post.findById(postId);
-        // console.log(post);
+        // console.log(postId);
         if(post.likes.includes(userId)){
             await Post.findByIdAndUpdate(postId,{$pull:{likes:userId}},{new:true})
             // console.log("Liked by user")
@@ -143,7 +143,7 @@ export async function likePost(req,res){
                     relatedUser:userId,
                     relatedPost:postId,
                 });
-
+                // console.log(newNotification);
                 await newNotification.save();
             }
             await Post.findByIdAndUpdate(postId,{$push:{likes:userId}},{new:true})

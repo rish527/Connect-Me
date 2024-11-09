@@ -1,19 +1,20 @@
 import { json } from "express";
 import Notification from "../models/notification.js"
 
-export const getUserNotifications=async(req,res)=>{
-    try {
-        const notifications=await Notification.find({recipient:req.user._id})
-        .sort({createdAt:-1})
-        .populate("relatedUser","name username profilePicture")
-        .populate("relatedPost","content image");
+export const getUserNotifications = async (req, res) => {
+	try {
+		const notifications = await Notification.find({ recipient: req.user._id })
+			.sort({ createdAt: -1 })
+			.populate("relatedPost", "content img")
+			.populate("relatedUser", "name username profilePicture")
 
-        res.status(200).json(notifications);
-    } catch (error) {
-        console.error("Error in getUserNotifications controller:",error);
-        res.status(500).json({message:"Internal Server Error"});
-    }
-}
+		res.status(200).json(notifications);
+	} catch (error) {
+		console.error("Error in getUserNotifications controller:", error);
+		res.status(500).json({ message: "Internal server error" });
+	}
+};
+
 
 export const markNotificationAsRead=async(req,res)=>{
     try {

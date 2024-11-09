@@ -94,9 +94,9 @@ function NotificationPage() {
 
         return(
             <Link to={`/post/${relatedPost._id}`}
-            className=''>
+            className='mt-2 p-2 bg-gray-50 rounded-md flex items-center space-x-2 hover:bg-gray-100 transition-color'>
                 {relatedPost.img && (
-                    <img src={relatedPost.img} alt='post preview' className='' />
+                    <img src={relatedPost.img} alt='post preview' className='w-10 h-10 object-cover rounded' />
                 )}
                 <div className=''>
                     <p>{relatedPost.content}</p>
@@ -106,7 +106,7 @@ function NotificationPage() {
         )
     }
 
-    console.log(notifications);
+    // console.log(notifications);
     // console.log(notifications.createdAt);
     // console.log(new Date(notifications.createdAt));
 
@@ -153,6 +153,7 @@ function NotificationPage() {
                                                 })}
                                                 {/* {formatDistance(new Date(notification.createdAt),new Date(),{addSuffix:true})} */}
                                             </p>
+                                            {/* {console.log(notification)} */}
                                             {renderRelatedPost(notification.relatedPost)}
                                         </div>
                                     </div>
