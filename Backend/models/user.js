@@ -18,7 +18,7 @@ const userSchema=new mongoose.Schema({
     },
     headline:{
         type:String,
-        default:"LinkedIn User"
+        default:"Connecting"
     },
     location:{
         type:String,
