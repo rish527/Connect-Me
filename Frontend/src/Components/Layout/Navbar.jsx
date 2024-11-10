@@ -38,10 +38,10 @@ const Navbar = () => {
           <div className='flex justify-between items-center py-3'>
             <div className='flex items-center space-x-4'>
               <Link to='/'>
-                <img className='h-8 rounded' src='/small-logo.png' alt='LinkedIn' />
+                <img className='h-10 rounded' src='/small-logo.png' alt='LinkedIn' />
               </Link>
             </div>
-            <div className='flex items-center gap-4 md:gap-6'>
+            <div className='flex items-center gap-8 md:gap-6'>
               {authUser ? (
                 <>
                   <Link to={"/"} className='text-neutral flex flex-col items-center'>
